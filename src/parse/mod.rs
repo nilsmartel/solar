@@ -1,16 +1,20 @@
 mod keyword;
+mod parse;
 mod util;
-
 use keyword::is_keyword;
 use nom::character::complete::alpha1;
+use nom::combinator::map;
+use nom::sequence::separated_pair;
 use nom::IResult;
+use parse::Parse;
+use util::char_ws;
 
 #[derive(Debug, Eq, PartialEq, PartialOrd, Ord, Clone, Hash)]
 pub struct Identifier(String);
-impl Identifier {
+impl Parse for Identifier {
     /// Recognize Identifiers,
     /// Escapes keywords
-    pub fn parse(input: &str) -> IResult<&str, Identifier> {
+    fn parse(input: &str) -> IResult<&str, Identifier> {
         let (rest, identifier) = alpha1(input)?;
 
         if is_keyword(identifier) {
@@ -19,13 +23,6 @@ impl Identifier {
 
         Ok((rest, Identifier(identifier.to_string())))
     }
-
-    /// Recognize Identifiers,
-    /// Escape keywords,
-    /// Ignore Whitespace
-    pub fn parse_ws(input: &str) -> IResult<&str, Identifier> {
-        util::ignore_ws(Identifier::parse)(input)
-    }
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -33,10 +30,25 @@ struct Type {
     name: Identifier,
 }
 
+impl Parse for Type {
+    fn parse(input: &str) -> IResult<&str, Type> {
+        nom::combinator::map(Identifier::parse, |name| Type { name })(input)
+    }
+}
+
 #[derive(Clone, Debug, Eq, PartialEq)]
 struct Parameter {
     name: Identifier,
     kind: Type,
+}
+
+impl Parse for Parameter {
+    fn parse(input: &str) -> nom::IResult<&str, Self> {
+        map(
+            separated_pair(Identifier::parse, char_ws(':'), Type::parse_ws),
+            |(name, kind)| Parameter { name, kind },
+        )(input)
+    }
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
