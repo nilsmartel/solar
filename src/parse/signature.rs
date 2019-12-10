@@ -3,7 +3,10 @@ use nom::{combinator::map, sequence::separated_pair, IResult};
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Type {
+    // TODO include generics and proper modules
+    // path: Option<terminal::ImportPath>,
     name: Identifier,
+    // generic_types: Vec<Type>
 }
 
 impl Parse for Type {
