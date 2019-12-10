@@ -1,1 +1,3 @@
-mod ident
+mod ident;
+
+pub use ident::*;

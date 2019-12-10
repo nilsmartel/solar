@@ -1,29 +1,14 @@
 mod keyword;
+mod terminals;
 mod traits;
 mod util;
 use keyword::is_keyword;
-use nom::character::complete::alpha1;
 use nom::combinator::map;
 use nom::sequence::separated_pair;
 use nom::IResult;
+use terminals::Identifier;
 use traits::Parse;
 use util::char_ws;
-
-#[derive(Debug, Eq, PartialEq, PartialOrd, Ord, Clone, Hash)]
-pub struct Identifier(String);
-impl Parse for Identifier {
-    /// Recognize Identifiers,
-    /// Escapes keywords
-    fn parse(input: &str) -> IResult<&str, Identifier> {
-        let (rest, identifier) = alpha1(input)?;
-
-        if is_keyword(identifier) {
-            return Err(nom::Err::Error((input, nom::error::ErrorKind::Tag)));
-        }
-
-        Ok((rest, Identifier(identifier.to_string())))
-    }
-}
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Type {
@@ -62,12 +47,14 @@ mod test_paramter {
         assert_eq!(
             result,
             Parameter {
-                name: Identifier("myvar".to_string()),
+                name: "myvar".into(),
                 kind: Type {
-                    name: Identifier("string".to_string())
+                    name: "string".into()
                 }
             }
-        )
+        );
+
+        assert_eq!(rest, "");
     }
 }
 
