@@ -26,7 +26,7 @@ impl Parse for Identifier {
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
-struct Type {
+pub struct Type {
     name: Identifier,
 }
 
@@ -37,9 +37,9 @@ impl Parse for Type {
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
-struct Parameter {
-    name: Identifier,
-    kind: Type,
+pub struct Parameter {
+    pub name: Identifier,
+    pub kind: Type,
 }
 
 impl Parse for Parameter {
@@ -48,6 +48,26 @@ impl Parse for Parameter {
             separated_pair(Identifier::parse, char_ws(':'), Type::parse_ws),
             |(name, kind)| Parameter { name, kind },
         )(input)
+    }
+}
+
+#[cfg(test)]
+mod test_paramter {
+    use super::*;
+    #[test]
+    fn basic() {
+        let input = "myvar: string";
+        let (rest, result) = Parameter::parse(input).unwrap();
+
+        assert_eq!(
+            result,
+            Parameter {
+                name: Identifier("myvar".to_string()),
+                kind: Type {
+                    name: Identifier("string".to_string())
+                }
+            }
+        )
     }
 }
 
