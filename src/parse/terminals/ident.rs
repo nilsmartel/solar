@@ -1,6 +1,5 @@
-use crate::parse::is_keyword;
+use crate::parse::keyword::is_keyword;
 use crate::parse::traits::Parse;
-use crate::parse::util::concat;
 use nom::character::complete::{alpha1, alphanumeric0};
 use nom::combinator::map;
 use nom::sequence::pair;
