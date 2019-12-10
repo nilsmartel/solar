@@ -1,12 +1,12 @@
 mod keyword;
-mod parse;
+mod traits;
 mod util;
 use keyword::is_keyword;
 use nom::character::complete::alpha1;
 use nom::combinator::map;
 use nom::sequence::separated_pair;
 use nom::IResult;
-use parse::Parse;
+use traits::Parse;
 use util::char_ws;
 
 #[derive(Debug, Eq, PartialEq, PartialOrd, Ord, Clone, Hash)]
