@@ -1,0 +1,9 @@
+type uint64 {
+    # tuple of 8 bytes, just to occupy the correct size
+    value: (byte; 8)
+}
+
+function Add(a: uint46, b: uint64) -> uint64
+wasm (
+
+)
