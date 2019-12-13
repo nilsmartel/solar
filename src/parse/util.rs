@@ -137,5 +137,5 @@ pub fn fold_concat<'a, T, E>(
 pub fn ws_terminated<'a, T>(
     parser: impl Fn(&'a str) -> IResult<&'a str, T>,
 ) -> impl Fn(&'a str) -> IResult<&'a str, T> {
-    not_followed(parser, nom::character::complete::one_of(" \n\r\t"))
+    nom::sequence::terminated(parser, nom::character::complete::one_of(" \n\r\t"))
 }
