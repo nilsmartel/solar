@@ -1,4 +1,6 @@
-use crate::parse::{instructions::Expression, signature::Type, terminals::Identifier, Parse};
+use crate::parse::{
+    instructions::Expression, keyword, signature::Type, terminals::Identifier, Parse,
+};
 #[derive(Clone, Debug)]
 pub struct VariableDecl {
     name: Identifier,
@@ -19,10 +21,7 @@ impl Parse for VariableDecl {
 
         map(
             tuple((
-                preceded(
-                    terminated(tag("let"), one_of(" \n\t\r")),
-                    Identifier::parse_ws,
-                ),
+                preceded(keyword::tag_do, Identifier::parse_ws),
                 preceded(char_ws(':'), Type::parse_ws),
                 opt(preceded(
                     char_ws('='),
