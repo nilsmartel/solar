@@ -1,9 +1,17 @@
 use crate::parse::{
     instructions::{ControlFlow, Expression},
+    keyword,
     keyword::tag_do,
     terminals::Identifier,
+    util::char_ws,
+    util::tag_ws,
     Parse,
 };
+use nom::combinator::opt;
+use nom::sequence::delimited;
+use nom::sequence::preceded;
+use nom::sequence::tuple;
+use nom::{branch::alt, bytes::complete::tag, combinator::map};
 
 /// do abc = <expr>;
 #[derive(Clone, Debug)]
@@ -15,10 +23,6 @@ pub struct AssignStatement {
 
 impl Parse for AssignStatement {
     fn parse(input: &str) -> nom::IResult<&str, Self> {
-        use nom::combinator::map;
-        use nom::sequence::preceded;
-        use nom::sequence::tuple;
-
         map(
             tuple((
                 preceded(tag_do, Identifier::parse_ws),
@@ -43,8 +47,6 @@ pub enum AssignmentType {
 
 impl Parse for AssignmentType {
     fn parse(input: &str) -> nom::IResult<&str, Self> {
-        use nom::{branch::alt, bytes::complete::tag, combinator::map};
-
         alt((
             map(tag("="), |_| AssignmentType::Assign),
             map(tag("+="), |_| AssignmentType::Add),
@@ -58,6 +60,35 @@ pub struct BranchStatement {
     condition: Box<Expression>,
     body: Box<ControlFlow>,
     default: Option<Box<ControlFlow>>,
+}
+
+impl Parse for BranchStatement {
+    fn parse(input: &str) -> nom::IResult<&str, Self> {
+        map(
+            tuple((
+                map(
+                    preceded(keyword::tag_branch, Expression::parse_ws),
+                    Box::new,
+                ),
+                map(
+                    delimited(char_ws('{'), ControlFlow::parse_ws, char_ws('}')),
+                    Box::new,
+                ),
+                opt(preceded(
+                    keyword::tag_default,
+                    map(
+                        delimited(char_ws('{'), ControlFlow::parse_ws, char_ws('}')),
+                        Box::new,
+                    ),
+                )),
+            )),
+            |(condition, body, default)| BranchStatement {
+                condition,
+                body,
+                default,
+            },
+        )(input)
+    }
 }
 
 /// do abc = <expr>;
