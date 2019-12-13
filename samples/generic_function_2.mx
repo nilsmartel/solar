@@ -1,0 +1,3 @@
+generic A, B, C
+    where A declares Add(A, B) -> C
+function add_stuff(a: A, b: B) -> C = a + b

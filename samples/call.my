@@ -1,0 +1,5 @@
+my_function 'x' some_literal ( this_gets_called) (this_gets_called_as_well 27.3)
+
+function abc_def(x: float64) -> (cos x) * 2
+function nonnon(x: float64) -> 2 * cos x | abc_def
+# abc_def(2*cos(x))

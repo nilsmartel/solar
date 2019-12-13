@@ -1,0 +1,5 @@
+generic A, B, C, D
+    where
+        A declares Add(A, B) -> C and Pow(A, int64) -> A,
+        B declares Add(B, C) -> D
+function complex_stuff(a: A, b: B) -> D = b + (a*2 +b)
