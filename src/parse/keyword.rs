@@ -9,21 +9,35 @@ pub fn is_keyword(s: &str) -> bool {
 use crate::parse::util::ws_terminated;
 use nom::{bytes::complete::tag, IResult};
 
+pub fn tag_loop(i: &str) -> IResult<&str, &str> {
+    ws_terminated(tag("loop"))(i)
+}
+
 pub fn tag_do(i: &str) -> IResult<&str, &str> {
-    tag_terminated_word("do", i)
+    ws_terminated(tag("do"))(i)
 }
+
+pub fn tag_ret(i: &str) -> IResult<&str, &str> {
+    ws_terminated(tag("ret"))(i)
+}
+
 pub fn tag_branch(i: &str) -> IResult<&str, &str> {
-    tag_terminated_word("branch", i)
+    ws_terminated(tag("branch"))(i)
 }
+
 pub fn tag_default(i: &str) -> IResult<&str, &str> {
-    tag_terminated_word("default", i)
+    ws_terminated(tag("default"))(i)
 }
+
 pub fn tag_let(i: &str) -> IResult<&str, &str> {
     ws_terminated(tag("let"))(i)
 }
 
-fn tag_terminated_word<'a>(word: &'a str, input: &'a str) -> IResult<&'a str, &'a str> {
-    ws_terminated(tag(word))(input)
+pub fn tag_is(i: &str) -> IResult<&str, &str> {
+    ws_terminated(tag("is"))(i)
+}
+pub fn tag_then(i: &str) -> IResult<&str, &str> {
+    ws_terminated(tag("then"))(i)
 }
 
 #[cfg(test)]

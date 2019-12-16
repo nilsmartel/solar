@@ -7,10 +7,12 @@ use crate::parse::{
     util::tag_ws,
     Parse,
 };
+
 use nom::combinator::opt;
 use nom::sequence::delimited;
 use nom::sequence::preceded;
 use nom::sequence::tuple;
+use nom::IResult;
 use nom::{branch::alt, bytes::complete::tag, combinator::map};
 
 /// do abc = <expr>;
@@ -102,4 +104,28 @@ pub enum Statement {
     Branch(BranchStatement),
     Return(Box<Expression>),
     Loop(Box<ControlFlow>),
+}
+
+impl Parse for Statement {
+    fn parse(input: &str) -> IResult<&str, Statement> {
+        nom::branch::alt((
+            map(AssignStatement::parse, Statement::Assign),
+            map(BranchStatement::parse, Statement::Branch),
+            map(
+                preceded(keyword::tag_ret, map(Expression::parse_ws, Box::new)),
+                Statement::Return,
+            ),
+            map(
+                preceded(
+                    keyword::tag_loop,
+                    delimited(
+                        char_ws('{'),
+                        map(ControlFlow::parse_ws, Box::new),
+                        char_ws('}'),
+                    ),
+                ),
+                Statement::Loop,
+            ),
+        ))(input)
+    }
 }
