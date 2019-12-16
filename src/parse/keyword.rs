@@ -1,7 +1,7 @@
 pub fn is_keyword(s: &str) -> bool {
     match s {
-        "when" | "case" | "if" | "match" | "do" | "loop" | "branch" | "default" | "function"
-        | "ret" | "let" => true,
+        "when" | "is" | "then" | "case" | "if" | "match" | "do" | "loop" | "branch" | "default"
+        | "function" | "ret" | "let" => true,
         _ => false,
     }
 }
