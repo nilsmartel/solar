@@ -56,3 +56,9 @@ Open Discussion:
         vs
 
     is <expr> :
+
+is left ( "left" )
+or is right ( 1234567 | 
+        is x: x & 1 == 0 ( "even")
+        else ( "uneven" )
+    )

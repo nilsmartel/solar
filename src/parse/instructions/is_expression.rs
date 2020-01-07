@@ -12,6 +12,14 @@ pub struct IsExpression {
     cases: Vec<Case>,
 }
 
+impl Parse for IsExpression {
+    fn parse(input: &str) -> IResult<&str, Self> {
+        map(nom::multi::many1(Case::parse_ws), |cases| IsExpression {
+            cases,
+        })(input)
+    }
+}
+
 struct Case {
     matcher: Box<Expression>,
     then: Box<Expression>,
