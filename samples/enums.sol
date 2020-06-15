@@ -1,4 +1,21 @@
+
+
 type direction = left | right
+-- same as
+type direction =
+    | left
+    | right
+
+-- this one is prefered
+type maybe T
+    | none
+    | some T
+
+generic T
+type Maybe =
+    | None
+    | Some T
+
 
 type tree =
     | leaf
@@ -8,6 +25,7 @@ function depth(tree) -> int;
 function depth(leaf) = 0;
 function depth(node(_, l, r)) = 1 +  max (depth l) (depth r);
 
+function pair(first: A, second: B) A, B -> Pair A B = Pair first:first second:second
 
 
 function depth(t: tree) -> int =
@@ -18,7 +36,7 @@ function depth(t: tree) -> int =
 
 let sumtree = match(tree)
     is leaf then 0
-    is node(v, l, r) then v + sumtree l + sumtree r
+    or node(v, l, r) then v + sumtree l + sumtree r
 
 
 #   `match` keyword
@@ -58,7 +76,7 @@ Open Discussion:
     is <expr> :
 
 is left ( "left" )
-or is right ( 1234567 | 
+or is right ( 1234567 |
         is x: x & 1 == 0 ( "even")
         else ( "uneven" )
     )

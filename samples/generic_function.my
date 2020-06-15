@@ -3,3 +3,7 @@ generic A, B, C, D
         A declares Add(A, B) -> C and Pow(A, int64) -> A,
         B declares Add(B, C) -> D
 function complex_stuff(a: A, b: B) -> D = b + (a*2 +b)
+
+
+# maybe this?
+# function complex_stuff(a: A, b: B) :: A, B -> = a+b
