@@ -3,6 +3,8 @@ use crate::parse::{
     signature::{FunctionDecl, VariableDecl},
     Parse,
 };
+use nom::branch::alt;
+use nom::combinator::map;
 
 #[derive(Clone, Debug)]
 pub struct ControlFlow {
@@ -20,4 +22,13 @@ impl Parse for ControlFlow {
 enum DeclarationOrStatement {
     Decl(VariableDecl),
     Statement(Statement),
+}
+
+impl Parse for DeclarationOrStatement {
+    fn parse(input: &str) -> nom::IResult<&str, Self> {
+        alt((
+            map(VariableDecl::parse, DeclarationOrStatement::Decl),
+            map(Statement::parse, DeclarationOrStatement::Statement),
+        ))(input)
+    }
 }
